@@ -9,6 +9,9 @@
 # By default do not build perl swig bindings
 %bcond_with perl
 
+# By default build python swig bindings
+%bcond_without python
+
 # This spec file is not synchronized to the Fedora downstream.
 # It serves as Fedora CI configuration and as support for downstream updates.
 Name:           openscap
@@ -55,7 +58,9 @@ BuildRequires:  perl-devel
 BuildRequires:  pkgconfig(popt)
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  pkgconfig(libprocps)
+%if %{with python}
 BuildRequires:  pkgconfig(python3)
+%endif
 BuildRequires:  pkgconfig(rpm)
 BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  swig
@@ -107,6 +112,7 @@ Requires:       %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%if %{with python}
 %package        python3
 Summary:        Python 3 bindings for %{name}
 Requires:       %{name}%{?_isa} = %{epoch}:%{version}-%{release}
@@ -114,6 +120,7 @@ Requires:       %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 %description    python3
 The %{name}-python3 package contains the bindings so that %{name}
 libraries can be used by python3.
+%endif
 
 %package        scanner
 Summary:        OpenSCAP Scanner Tool (oscap)
@@ -186,6 +193,9 @@ tar xvzf %{SOURCE1} --directory=yaml-filter --strip-components=1
 %if ! %{with perl}
     -DENABLE_PERL=OFF \
 %endif
+%if ! %{with python}
+    -DENABLE_PYTHON=OFF \
+%endif
 
 %cmake_build
 make docs
@@ -233,8 +243,10 @@ ln -sf ../oscap-remediate.service %{buildroot}%{_unitdir}/system-update.target.w
 %{_datadir}/openscap/xsl/*
 %{_datadir}/openscap/cpe/*
 
+%if %{with python}
 %files python3
 %{python3_sitearch}/*
+%endif
 
 %files devel
 %doc %{_pkgdocdir}/html/
