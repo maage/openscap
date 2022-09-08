@@ -1,3 +1,6 @@
+# run checksuite
+%bcond_without check
+
 # build with asan
 # - bindings/sce fail to work because of some asan linkage issues presumed
 %bcond_with asan
