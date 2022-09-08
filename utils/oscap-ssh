@@ -305,7 +305,7 @@ echo "Starting the evaluation..."
 # changing directory because of --oval-results support. oval results files are
 # dumped into PWD, and we can't be sure by the file names - we need controlled
 # environment
-full_command="$(command_array_to_string "${OSCAP_SUDO[@]}" scap "${oscap_args[@]}")"
+full_command="$(command_array_to_string "${OSCAP_SUDO[@]}" oscap "${oscap_args[@]}")"
 ssh_execute_with_command_and_options "cd ${REMOTE_TEMP_DIR} || exit 1; umask 022; ${full_command}" "${SSH_TTY_ALLOCATION_OPTION}"
 OSCAP_EXIT_CODE=$?
 echo "oscap exit code: ${OSCAP_EXIT_CODE}"
