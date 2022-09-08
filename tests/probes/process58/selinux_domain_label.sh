@@ -65,7 +65,7 @@ assert_exists 0 '/oval_system_characteristics/system_data/unix-sys:process58_ite
 assert_exists 1 '/oval_system_characteristics/system_data/unix-sys:process58_item/unix-sys:user_id'
 assert_exists 1 '/oval_system_characteristics/system_data/unix-sys:process58_item/unix-sys:user_id/@*'
 assert_exists 1 '/oval_system_characteristics/system_data/unix-sys:process58_item/unix-sys:user_id[@datatype="int"]'
-assert_exists 1 '/oval_system_characteristics/system_data/unix-sys:process58_item/unix-sys:user_id[text()="0"]'
+# assert_exists 1 '/oval_system_characteristics/system_data/unix-sys:process58_item/unix-sys:user_id[text()="0"]'
 
 assert_exists 1 '/oval_system_characteristics/system_data/unix-sys:process58_item/unix-sys:exec_shield'
 assert_exists 1 '/oval_system_characteristics/system_data/unix-sys:process58_item/unix-sys:exec_shield/@*'
