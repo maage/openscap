@@ -152,11 +152,16 @@ function require_dbus {
 # Check if probe exists, use it as follows:
 # probecheck 'probe' || return 255
 function probecheck {
-	if ! $OSCAP --version | grep "\<"$1"\>" >/dev/null ; then
-		echo -e "Probe $1 does not exist!\n"
+	local rc=0
+	$OSCAP --version | grep -q "\<${1}\>" || rc=$?
+	if (( rc == 2 )); then
+		# grep had an error, fail this test suite totally
+		exit 2
+	elif (( rc ==  1 ));  then
+		printf "Probe %s does not exist!\n" "$1"
 		return 255 # Test is not applicable.
 	fi
-    return 0
+	return 0
 }
 
 # Check for package names and return a version number
