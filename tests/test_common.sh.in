@@ -8,6 +8,8 @@
 # Authors:
 #      Ondrej Moris <omoris@redhat.com>
 
+set -x
+
 # Normalized path.
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 
@@ -30,12 +32,12 @@ if [ -z ${CUSTOM_OSCAP+x} ] ; then
     if [ $enable_valgrind != "OFF" ] ; then
         [ -z "@CMAKE_BINARY_DIR@" ] || export OSCAP="@CMAKE_SOURCE_DIR@/tests/valgrind_test.sh"
     else
-        [ -z "@CMAKE_BINARY_DIR@" ] || export OSCAP="bash $RUN_WRAPPER $OSCAP_EXEC"
+        [ -z "@CMAKE_BINARY_DIR@" ] || export OSCAP="bash $RUN_WRAPPER $OSCAP_EXEC --verbose DEVEL"
     fi
     [ -z "@CMAKE_BINARY_DIR@" ] || export OSCAP_CHROOTABLE_EXEC="@CMAKE_BINARY_DIR@/utils/oscap-chrootable"
     [ -z "@CMAKE_BINARY_DIR@" ] || export OSCAP_CHROOTABLE="bash @CMAKE_BINARY_DIR@/run $OSCAP_CHROOTABLE_EXEC"
 else
-    export OSCAP=${CUSTOM_OSCAP}
+    export OSCAP="${CUSTOM_OSCAP} --verbose DEVEL"
 fi
 
 export XMLDIFF="@CMAKE_SOURCE_DIR@/tests/xmldiff.pl"
