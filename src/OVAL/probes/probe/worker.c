@@ -524,11 +524,12 @@ static SEXP_t *probe_set_combine(SEXP_t *cobj0, SEXP_t *cobj1, oval_setobject_op
         /* perform the set operation */
         switch(op) {
         case OVAL_SET_OPERATION_UNION:
+		dD("set UNION");
                 while (item0 != NULL && item1 != NULL) {
                         cmp = SEXP_refcmp(item0, item1);
 			dO(OSCAP_DEBUGOBJ_SEXP, item0);
 			dO(OSCAP_DEBUGOBJ_SEXP, item1);
-			dD("set UNION %p %p = %d", item0, item1, cmp);
+			dD("value = %d", cmp);
 
                         if (cmp < 0) {
                                 SEXP_list_add(res, item0);
@@ -545,21 +546,26 @@ static SEXP_t *probe_set_combine(SEXP_t *cobj0, SEXP_t *cobj1, oval_setobject_op
 
                 if (item0 != NULL) {
                         do {
+				dO(OSCAP_DEBUGOBJ_SEXP, item0);
+				dD("value = -1");
                                 SEXP_list_add(res, item0);
                         } while((item0 = SEXP_list_it_next(sit0)) != NULL);
                 } else if (item1 != NULL) {
                         do {
+				dO(OSCAP_DEBUGOBJ_SEXP, item1);
+				dD("value = 1");
                                 SEXP_list_add(res, item1);
                         } while((item1 = SEXP_list_it_next(sit1)) != NULL);
                 }
 
                 break;
         case OVAL_SET_OPERATION_INTERSECTION:
+		dD("set INTERSECTION");
                 while (item0 != NULL && item1 != NULL) {
                         cmp = SEXP_refcmp(item0, item1);
 			dO(OSCAP_DEBUGOBJ_SEXP, item0);
 			dO(OSCAP_DEBUGOBJ_SEXP, item1);
-			dD("set INTERSECTION %p %p = %d", item0, item1, cmp);
+			dD("value = %d", cmp);
 
                         if (cmp < 0)
                                 item0 = SEXP_list_it_next(sit0);
@@ -574,11 +580,12 @@ static SEXP_t *probe_set_combine(SEXP_t *cobj0, SEXP_t *cobj1, oval_setobject_op
 
                 break;
         case OVAL_SET_OPERATION_COMPLEMENT:
+		dD("set COMPLEMENT");
                 while (item0 != NULL && item1 != NULL) {
                         cmp = SEXP_refcmp(item0, item1);
 			dO(OSCAP_DEBUGOBJ_SEXP, item0);
 			dO(OSCAP_DEBUGOBJ_SEXP, item1);
-			dD("set COMPLEMENT %p %p = %d", item0, item1, cmp);
+			dD("value = %d", cmp);
 
                         if (cmp < 0) {
                                 SEXP_list_add(res, item0);
@@ -593,6 +600,8 @@ static SEXP_t *probe_set_combine(SEXP_t *cobj0, SEXP_t *cobj1, oval_setobject_op
 
                 if (item0 != NULL) {
                         do {
+				dO(OSCAP_DEBUGOBJ_SEXP, item0);
+				dD("value = -1");
                                 SEXP_list_add(res, item0);
                         } while((item0 = SEXP_list_it_next(sit0)) != NULL);
                 }
