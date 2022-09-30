@@ -526,6 +526,9 @@ static SEXP_t *probe_set_combine(SEXP_t *cobj0, SEXP_t *cobj1, oval_setobject_op
         case OVAL_SET_OPERATION_UNION:
                 while (item0 != NULL && item1 != NULL) {
                         cmp = SEXP_refcmp(item0, item1);
+			dO(OSCAP_DEBUGOBJ_SEXP, item0);
+			dO(OSCAP_DEBUGOBJ_SEXP, item1);
+			dD("set UNION %p %p = %d", item0, item1, cmp);
 
                         if (cmp < 0) {
                                 SEXP_list_add(res, item0);
@@ -554,6 +557,9 @@ static SEXP_t *probe_set_combine(SEXP_t *cobj0, SEXP_t *cobj1, oval_setobject_op
         case OVAL_SET_OPERATION_INTERSECTION:
                 while (item0 != NULL && item1 != NULL) {
                         cmp = SEXP_refcmp(item0, item1);
+			dO(OSCAP_DEBUGOBJ_SEXP, item0);
+			dO(OSCAP_DEBUGOBJ_SEXP, item1);
+			dD("set INTERSECTION %p %p = %d", item0, item1, cmp);
 
                         if (cmp < 0)
                                 item0 = SEXP_list_it_next(sit0);
@@ -570,6 +576,9 @@ static SEXP_t *probe_set_combine(SEXP_t *cobj0, SEXP_t *cobj1, oval_setobject_op
         case OVAL_SET_OPERATION_COMPLEMENT:
                 while (item0 != NULL && item1 != NULL) {
                         cmp = SEXP_refcmp(item0, item1);
+			dO(OSCAP_DEBUGOBJ_SEXP, item0);
+			dO(OSCAP_DEBUGOBJ_SEXP, item1);
+			dD("set COMPLEMENT %p %p = %d", item0, item1, cmp);
 
                         if (cmp < 0) {
                                 SEXP_list_add(res, item0);
