@@ -195,8 +195,10 @@ xmlNode *oval_generator_to_dom(struct oval_generator *generator, xmlDocPtr doc, 
 	const char *namespace_uri = "http://oval.mitre.org/XMLSchema/oval-definitions-5";
 	sv_itr = oscap_htable_iterator_new(generator->platform_schema_versions);
 	while (oscap_htable_iterator_has_more(sv_itr)) {
-		const char *platform, *version;
+		const char *platform = NULL, *version = NULL;
 		oscap_htable_iterator_next_kv(sv_itr, &platform, (void **) &version);
+		if (platform == NULL && version == NULL)
+			continue;
 		xmlNode *sv_node = xmlNewTextChild(gen_node, ns_common,
 			BAD_CAST "schema_version", BAD_CAST version);
 		size_t namespace_uri_length = strlen(namespace_uri) + 1 + strlen(platform) + 1;
