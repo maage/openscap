@@ -208,7 +208,7 @@ void oval_string_map_put(struct oval_string_map *map, const char *key, void *val
 	}
 
 	if (rbt_str_add((rbt_t *)map, key_copy = strdup(key), val) != 0) {
-		dD("rbt_str_add: non-zero return code");
+		dD("rbt_str_add(%s, %s): non-zero return code", key, val);
                 free(key_copy);
         }
 }
@@ -223,6 +223,7 @@ void oval_string_map_put_string(struct oval_string_map *map, const char *key, co
 	if (rbt_str_add((rbt_t *)map, key_copy = strdup(key), str) == 0)
 		return;
 	else {
+		dD("rbt_str_add(%s, %s): non-zero return code", key, val);
 		free(str);
                 free(key_copy);
         }
