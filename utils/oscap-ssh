@@ -191,14 +191,16 @@ shift 2
 
 check_oscap_arguments "$@"
 
-CONTROL_SOCKET_DIR=$(mktemp -d)
+CONTROL_SOCKET_DIR="$(mktemp -d)"
 CONTROL_SOCKET="${CONTROL_SOCKET_DIR}/ssh_socket"
 
 echo "Connecting to '${SSH_HOST}' on port '${SSH_PORT}'..."
 ssh_execute_with_options -M -f -N -o ServerAliveInterval=60 || die "Failed to connect!"
 echo "Connected!"
 
-REMOTE_TEMP_DIR=$(ssh_execute_with_command_and_options "mktemp -d") || die "Failed to create remote temporary directory!"
+REMOTE_TEMP_DIR="$(ssh_execute_with_command_and_options "mktemp -d")" || die "Failed to create remote temporary directory!"
+# Because ssh there might be extra \n, get rid of it
+REMOTE_TEMP_DIR="$(sed 's/[[:cntrl:]]//g' <<< "${REMOTE_TEMP_DIR}")"
 
 oscap_args=("$@")
 
