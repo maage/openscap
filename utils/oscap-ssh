@@ -330,9 +330,9 @@ if [ "${OVAL_RESULTS}" == "yes" ]; then
 fi
 
 echo "Removing remote temporary directory..."
-ssh_execute_with_command_and_options "rm -r ${REMOTE_TEMP_DIR}" || die "Failed to remove remote temporary directory!"
+ssh_execute_with_command_and_options "rm -rf ${REMOTE_TEMP_DIR}" || die "Failed to remove remote temporary directory!"
 echo "Disconnecting ssh and removing control ssh socket directory..."
 ssh_execute_with_options -O exit || die "Failed to disconnect!"
-rm -r "${CONTROL_SOCKET_DIR}" || die "Failed to remove local control SSH socket directory!"
+rm -rf "${CONTROL_SOCKET_DIR}" || die "Failed to remove local control SSH socket directory!"
 
 exit "${OSCAP_EXIT_CODE}"
