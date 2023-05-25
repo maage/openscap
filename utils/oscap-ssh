@@ -278,27 +278,27 @@ fi
 [ "${LOCAL_VARIABLES_PATH}" == "" ] || [ -f "${LOCAL_VARIABLES_PATH}" ] || die "OVAL variables file path '${LOCAL_VARIABLES_PATH}' isn't a valid file path or the file doesn't exist!"
 [ "${LOCAL_DIRECTIVES_PATH}" == "" ] || [ -f "${LOCAL_DIRECTIVES_PATH}" ] || die "OVAL directives file path '${LOCAL_DIRECTIVES_PATH}' isn't a valid file path or the file doesn't exist!"
 
-if [ "${LOCAL_CONTENT_PATH}" != "" ]; then
+if [ -n "${LOCAL_CONTENT_PATH}" ]; then
     echo "Copying input file '${LOCAL_CONTENT_PATH}' to remote working directory '${REMOTE_TEMP_DIR}'..."
     scp_copy_to_temp_dir "${LOCAL_CONTENT_PATH}" input.xml || die "Failed to copy input file to remote temporary directory!"
 fi
-if [ "${LOCAL_TAILORING_PATH}" != "" ]; then
+if [ -n "${LOCAL_TAILORING_PATH}" ]; then
     echo "Copying tailoring file '${LOCAL_TAILORING_PATH}' to remote working directory '${REMOTE_TEMP_DIR}'..."
     scp_copy_to_temp_dir "${LOCAL_TAILORING_PATH}" tailoring.xml || die "Failed to copy tailoring file to remote temporary directory!"
 fi
-if [ "${LOCAL_LOCAL_FILES_PATH}" != "" ]; then
+if [ -n "${LOCAL_LOCAL_FILES_PATH}" ]; then
     echo "Copying directory '${LOCAL_LOCAL_FILES_PATH}' to remote working directory '${REMOTE_TEMP_DIR}'..."
     scp_copy_dir_to_temp_dir "${LOCAL_LOCAL_FILES_PATH}" local_files || die "Failed to copy directory ${LOCAL_LOCAL_FILES_PATH} to remote temporary directory!"
 fi
-if [ "${LOCAL_CPE_PATH}" != "" ]; then
+if [ -n "${LOCAL_CPE_PATH}" ]; then
     echo "Copying CPE file '${LOCAL_CPE_PATH}' to remote working directory '${REMOTE_TEMP_DIR}'..."
     scp_copy_to_temp_dir "${LOCAL_CPE_PATH}" cpe.xml || die "Failed to copy CPE file to remote temporary directory!"
 fi
-if [ "${LOCAL_VARIABLES_PATH}" != "" ]; then
+if [ -n "${LOCAL_VARIABLES_PATH}" ]; then
     echo "Copying OVAL variables file '${LOCAL_VARIABLES_PATH}' to remote working directory '${REMOTE_TEMP_DIR}'..."
     scp_copy_to_temp_dir "${LOCAL_VARIABLES_PATH}" variables.xml || die "Failed to copy OVAL variables file to remote temporary directory!"
 fi
-if [ "${LOCAL_DIRECTIVES_PATH}" != "" ]; then
+if [ -n "${LOCAL_DIRECTIVES_PATH}" ]; then
     echo "Copying OVAL directives file '${LOCAL_DIRECTIVES_PATH}' to remote working directory '${REMOTE_TEMP_DIR}'..."
     scp_copy_to_temp_dir "${LOCAL_DIRECTIVES_PATH}" directives.xml || die "Failed to copy OVAL directives file to remote temporary directory!"
 fi
@@ -313,16 +313,16 @@ OSCAP_EXIT_CODE=$?
 echo "oscap exit code: ${OSCAP_EXIT_CODE}"
 
 echo "Copying back requested files..."
-if [ "${TARGET_RESULTS}" != "" ]; then
+if [ -n "${TARGET_RESULTS}" ]; then
     scp_retreive_from_temp_dir results.xml "${TARGET_RESULTS}" || die "Failed to copy the results file back to local machine!"
 fi
-if [ "${TARGET_RESULTS_ARF}" != "" ]; then
+if [ -n "${TARGET_RESULTS_ARF}" ]; then
     scp_retreive_from_temp_dir results-arf.xml "${TARGET_RESULTS_ARF}" || die "Failed to copy the ARF file back to local machine!"
 fi
-if [ "${TARGET_REPORT}" != "" ]; then
+if [ -n "${TARGET_REPORT}" ]; then
     scp_retreive_from_temp_dir report.html "${TARGET_REPORT}" || die "Failed to copy the HTML report back to local machine!"
 fi
-if [ "${TARGET_SYSCHAR}" != "" ]; then
+if [ -n "${TARGET_SYSCHAR}" ]; then
     scp_retreive_from_temp_dir syschar.xml "${TARGET_SYSCHAR}" || die "Failed to copy the OVAL syschar file back to local machine!"
 fi
 if [ "${OVAL_RESULTS}" == "yes" ]; then
