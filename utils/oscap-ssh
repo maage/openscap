@@ -329,9 +329,51 @@ echo "Starting the evaluation..."
 # changing directory because of --oval-results support. oval results files are
 # dumped into PWD, and we can't be sure by the file names - we need controlled
 # environment
-full_command="$(command_array_to_string "${OSCAP_SUDO[@]}" oscap "${oscap_args[@]}")"
-ssh_execute_with_command_and_options "cd ${REMOTE_TEMP_DIR} || exit 1; umask 022; ${full_command}" "${SSH_TTY_ALLOCATION_OPTION}"
-OSCAP_EXIT_CODE=$?
+OSCAP_EXIT_CODE=0
+# sudo can limit possibilities in many ways
+# - generally we do not want to query passwords
+# - oscap generated files needs to be pulled from host, umask
+# - sudo should be secured
+#
+# In the end there is possible to limit sudo not to allow this to work
+method=in
+case "${method}" in
+    "in")
+        # Only run oscap under sudo
+        # - does not work if there is umask limitation under sudo
+	# - allows sudoers configuration to limit only to oscap with noexec,
+	#   and also limit arguments
+        #
+        # use if you require:
+        # - xccdf_org.ssgproject.content_rule_sudo_add_noexec
+        handler="$(command_array_to_string bash)"
+        printf 'set -epux;\ncd %q || exit 1;\numask 022;\nexec%s oscap%s;\nexit 1;\n' \
+            "${REMOTE_TEMP_DIR}" \
+            "$(printf ' %q' "${OSCAP_SUDO[@]}")" \
+            "$(printf ' %q' "${oscap_args[@]}")" | \
+        ssh_execute_with_command_and_options "${handler}" "${SSH_TTY_ALLOCATION_OPTION}" || \
+            OSCAP_EXIT_CODE=$?
+        ;;
+    "out")
+        # Run bash under sudo
+	# - does not work if there what commands sudo can run
+	# - sudoers noexec not possible
+        # - allows to limit umask for sudo/root
+        #
+        # use if you need require:
+        # - xccdf_org.ssgproject.content_rule_sudo_add_umask
+        # - xccdf_org.ssgproject.content_rule_accounts_umask_etc_bashrc
+        # - xccdf_org.ssgproject.content_rule_accounts_umask_etc_csh_cshrc
+        # - xccdf_org.ssgproject.content_rule_accounts_umask_etc_profile
+        handler="$(command_array_to_string "${OSCAP_SUDO[@]}" bash)"
+        printf 'set -epux;\ncd %q || exit 1;\numask 022;\nexec oscap%s;\nexit 1;\n' \
+            "${REMOTE_TEMP_DIR}" \
+            "$(printf ' %q' "${oscap_args[@]}")" | \
+        ssh_execute_with_command_and_options "${handler}" "${SSH_TTY_ALLOCATION_OPTION}" || \
+            OSCAP_EXIT_CODE=$?
+        ;;
+    *) exit 1 ;;
+esac
 echo "oscap exit code: ${OSCAP_EXIT_CODE}"
 
 echo "Copying back requested files..."
